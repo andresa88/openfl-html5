@@ -43,7 +43,7 @@ class Event {
 	
 	private var __isCancelled:Bool;
 	private var __isCancelledNow:Bool;
-	
+	private var __updateAfterEventCalled:Bool;
 	
 	public function new (type:String, bubbles:Bool = false, cancelable:Bool = false) {
 		
@@ -93,6 +93,5 @@ class Event {
 		return "[Event type=" + type + " bubbles=" + bubbles + " cancelable=" + cancelable + "]";
 		
 	}
-	
 	
 }

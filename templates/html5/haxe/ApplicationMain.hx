@@ -39,8 +39,8 @@ import flash.Lib;
 		#else
 		var element:HtmlElement = cast js.Browser.document.getElementById ("openfl-embed");
 		#end
-		
-		flash.Lib.create (::WIN_WIDTH::, ::WIN_HEIGHT::, element, ::WIN_BACKGROUND::);
+
+		flash.Lib.create (::WIN_WIDTH::, ::WIN_HEIGHT::, element, ::WIN_BACKGROUND::, ::WIN_FPS::);
 		
 		preloader = ::if (PRELOADER_NAME != "")::new ::PRELOADER_NAME::::else::NMEPreloader::end:: ();
 		Lib.current.addChild (preloader);

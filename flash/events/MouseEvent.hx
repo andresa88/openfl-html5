@@ -107,6 +107,7 @@ class MouseEvent extends Event {
 		
 		
 		
+		__updateAfterEventCalled = true;
 	}
 	
 	

@@ -31,7 +31,7 @@ import js.Browser;
 	}
 
 	
-	public static function create (width:Int, height:Int, element:HtmlElement, backgroundColor:Int):Void {
+	public static function create (width:Int, height:Int, element:HtmlElement, backgroundColor:Int, frameRate:Int):Void {
 		
 		untyped __js__ ("
 			var lastTime = 0;
@@ -60,7 +60,7 @@ import js.Browser;
 			window.requestAnimFrame = window.requestAnimationFrame;
 		");
 		
-		var stage = new Stage (width, height, element, backgroundColor);
+		var stage = new Stage (width, height, element, backgroundColor, frameRate);
 		
 		if (current == null) {
 			

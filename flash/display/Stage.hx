@@ -60,9 +60,12 @@ class Stage extends Sprite {
 	private var __transparent:Bool;
 	private var __wasDirty:Bool;
 	
+	private var __time:Int = 0;
+	private var __previousTime:Int = 0;
+	private var __firstBrowserFrame:Bool = true;
+	private var __elapsed:Int = 0;
 	
-	
-	public function new (width:Int, height:Int, element:HtmlElement = null, color:Int = 0xFFFFFF) {
+	public function new (width:Int, height:Int, element:HtmlElement = null, color:Int = 0xFFFFFF, frameRate:Int = 60) {
 		
 		super ();
 		
@@ -243,8 +246,49 @@ class Stage extends Sprite {
 			
 		}
 		
-		Browser.window.requestAnimationFrame (cast __render);
 		
+		this.frameRate = frameRate;
+		
+		Browser.window.requestAnimationFrame (cast __browserFirstFrame);
+	}
+	
+	
+	private function __browserFirstFrame ():Void {
+		__time = Lib.getTimer();
+		__previousTime = __time;
+		
+		__render();
+		
+		if (this.frameRate == 0)
+			return;
+			
+		Browser.window.requestAnimationFrame (cast __browserFrame);
+	}
+	
+	private function __browserFrame ():Void {
+		
+		__time = Lib.getTimer();
+		var delta:Int = __time - __previousTime;
+		__previousTime = __time;
+		
+		
+		if (this.frameRate == 0)
+			return;
+		
+		var msPerFrame:Int = Std.int(1000 / this.frameRate);
+			
+		__elapsed += delta;
+		
+		if (this.frameRate == 60 || __elapsed >= msPerFrame) {
+			
+			__frame();
+			__render();
+			
+			__elapsed = 0;
+			//__elapsed -= delta;
+		}
+		
+		Browser.window.requestAnimationFrame (cast __browserFrame);
 	}
 	
 	
@@ -327,6 +371,12 @@ class Stage extends Sprite {
 			
 		}
 		
+		if (event.__updateAfterEventCalled)
+		{
+			__render ();
+			event.__updateAfterEventCalled = false;
+		}
+		
 	}
 	
 	
@@ -336,14 +386,23 @@ class Stage extends Sprite {
 		
 	}
 	
-	
-	private function __render ():Void {
-		
+	private function __frame():Void {
 		#if stats
 		__stats.begin ();
 		#end
 		
 		__broadcast (new Event (Event.ENTER_FRAME), true);
+		
+		__render();
+		
+		
+		#if stats
+		__stats.end ();
+		#end
+		
+	}
+	
+	private function __render ():Void {
 		
 		if (__invalidated) {
 			
@@ -351,6 +410,7 @@ class Stage extends Sprite {
 			__broadcast (new Event (Event.RENDER), true);
 			
 		}
+		
 		
 		__renderable = true;
 		__update (false, true);
@@ -407,13 +467,9 @@ class Stage extends Sprite {
 			
 		}*/
 		
-		#if stats
-		__stats.end ();
-		#end
-		
-		Browser.window.requestAnimationFrame (cast __render);
 		
 	}
+	
 	
 	
 	private function __resize ():Void {

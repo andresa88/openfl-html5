@@ -34,5 +34,10 @@ class KeyboardEvent extends Event {
 		
 	}
 	
-	
+	public function updateAfterEvent ():Void {
+		
+		
+		
+		__updateAfterEventCalled = true;
+	}
 }

@@ -21,7 +21,7 @@ class TimerEvent extends Event {
 	public function updateAfterEvent ():Void {
 		
 		
-		
+		__updateAfterEventCalled = true;
 	}
 	
 	
